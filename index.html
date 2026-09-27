@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script>/* gate-bootstrap: capture an early login submit before the remote gate wires up, so the first click is never lost */
+  (function(){function h(e){var f=e.target;if(f&&f.id==='gate-form'&&!window.MembershipGate){e.preventDefault();e.stopImmediatePropagation();window.__gateEarlySubmit=true;}}window.addEventListener('submit',h,true);window.__gateBootstrapDisarm=function(){window.removeEventListener('submit',h,true);};})();</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório IA — Maestros da IA</title>
+  <meta name="description" content="Gerador de relatório de resultados para cliente: insira as métricas do período e receba um relatório profissional com gráficos e análise escrita pela IA, pronto para enviar em PDF.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://gate.maestrosdaia.com">
+  <link rel="preload" href="https://gate.maestrosdaia.com/v1/membership-gate.js" as="script">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141b2d'/%3E%3Crect x='8' y='6' width='16' height='20' rx='2' fill='%23ffffff'/%3E%3Crect x='8' y='6' width='16' height='3' rx='1.5' fill='%23b0894f'/%3E%3Crect x='11' y='19' width='2.6' height='4' fill='%2334506f'/%3E%3Crect x='14.7' y='16' width='2.6' height='7' fill='%2334506f'/%3E%3Crect x='18.4' y='13' width='2.6' height='10' fill='%23b0894f'/%3E%3C/svg%3E">
+</head>
+<body>
+  <div class="bg-gradient"></div>
+
+  <!-- ============ MEMBERSHIP GATE ============ -->
+  <div id="gate-screen" class="screen active">
+    <div class="gate-container">
+      <div class="gate-header">
+        <svg class="gate-brand-glyph" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="9" y="5" width="30" height="38" rx="4" fill="#fbfcfe" stroke="#34506f" stroke-width="1.6"/>
+          <rect x="9" y="5" width="30" height="6" rx="3" fill="#141b2d"/>
+          <rect x="13.5" y="8" width="2.5" height="2.5" rx="1" fill="#b0894f"/>
+          <rect x="15" y="30" width="4" height="8" rx="1" fill="#34506f"/>
+          <rect x="22" y="25" width="4" height="13" rx="1" fill="#4a6a8e"/>
+          <rect x="29" y="20" width="4" height="18" rx="1" fill="#b0894f"/>
+          <path d="M15 22 L22 18 L29 14" stroke="#b0894f" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h1 class="gradient-text">Relatório IA</h1>
+        <p class="subtitle">Insira as métricas do período e receba um relatório de resultados profissional — com gráficos e análise escrita pela IA, pronto para enviar ao cliente em PDF.</p>
+        <span class="community-badge">Exclusivo para membros da Comunidade Maestros da IA</span>
+      </div>
+
+      <form id="gate-form" class="gate-form">
+        <div class="form-group">
+          <label for="gate-email">Seu e-mail cadastrado</label>
+          <input type="email" id="gate-email" placeholder="seu@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="gate-phone">Seu WhatsApp (com DDD)</label>
+          <input type="tel" id="gate-phone" placeholder="11999999999" autocomplete="tel">
+        </div>
+        <button type="submit" id="gate-submit" class="btn-primary">
+          <span class="btn-text">Verificar acesso</span>
+          <span class="btn-loading" style="display:none;">Verificando...</span>
+        </button>
+        <p id="gate-error" class="error-message" style="display:none;"></p>
+      </form>
+
+      <p class="gate-footer">Ainda não é membro? <a href="https://comunidade.maestrosdaia.com" target="_blank" rel="noopener noreferrer">Conheça a Comunidade Maestros da IA</a></p>
+    </div>
+  </div>
+
+  <!-- ============ API KEY SETUP ============ -->
+  <div id="key-screen" class="screen">
+    <div class="key-container">
+      <h2>Configure sua chave de API</h2>
+      <p class="subtitle">Sua chave fica salva apenas no seu navegador. Nunca é enviada para nossos servidores — toda a geração roda direto do seu navegador com a sua chave (BYOK).</p>
+
+      <div id="key-inputs" class="key-inputs">
+        <!-- Populated by api-key-manager.js -->
+      </div>
+
+      <div class="key-field model-pick">
+        <label for="key-model-select">Modelo de IA (você pode trocar depois)</label>
+        <select id="key-model-select"></select>
+      </div>
+
+      <div class="key-actions">
+        <button id="key-continue" class="btn-primary" disabled>Continuar para a ferramenta</button>
+        <button id="key-skip" class="btn-secondary">Pular por enquanto</button>
+      </div>
+
+      <details class="key-info">
+        <summary>Como consigo uma chave de API?</summary>
+        <div class="key-info-content">
+          <p>O <strong>Relatório IA</strong> usa o <strong>OpenRouter</strong> — uma única chave dá acesso a Claude, GPT, Gemini, DeepSeek e mais.</p>
+          <p><strong>OpenRouter:</strong> acesse <code>openrouter.ai/keys</code>, crie uma chave (<code>sk-or-...</code>) e cole acima. Você adiciona créditos na sua própria conta e paga só o que usar.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ============ MAIN APPLICATION ============ -->
+  <div id="app-screen" class="screen">
+    <header class="app-header">
+      <div class="header-left">
+        <h1 class="app-title">Relatório IA</h1>
+      </div>
+      <div class="header-right">
+        <a href="about.html" class="btn-icon" title="Sobre esta ferramenta" aria-label="Sobre">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </a>
+        <button id="manage-keys-btn" class="btn-icon" title="Gerenciar chave e modelo" aria-label="Gerenciar chave e modelo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        </button>
+        <button id="logout-btn" class="btn-icon" title="Sair" aria-label="Sair">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <div class="app-grid">
+
+        <!-- ---------- BRIEFING RAIL ---------- -->
+        <section class="brief-rail">
+          <div class="brief-head">
+            <h2>Briefing do relatório</h2>
+            <p>Preencha as métricas que você tem — o que ficar em branco é omitido do relatório.</p>
+          </div>
+          <div class="brief-body">
+
+            <div class="brief-section-label"><span class="lbl-num">01</span> Capa do relatório</div>
+            <div class="fld">
+              <label for="f-cliente">Cliente / marca</label>
+              <input type="text" id="f-cliente" placeholder="Ex.: Padaria Pão &amp; Cia">
+            </div>
+            <div class="fld-row">
+              <div class="fld">
+                <label for="f-periodo">Período</label>
+                <input type="text" id="f-periodo" placeholder="Setembro de 2026">
+              </div>
+              <div class="fld">
+                <label for="f-canal">Foco</label>
+                <select id="f-canal">
+                  <option value="Instagram">Instagram</option>
+                  <option value="Instagram + redes sociais">Instagram + redes</option>
+                  <option value="Redes sociais (multicanal)">Multicanal (redes)</option>
+                  <option value="Tráfego pago / marketing">Tráfego pago</option>
+                  <option value="Marketing geral">Geral</option>
+                </select>
+              </div>
+            </div>
+            <div class="fld">
+              <label for="f-preparado">Preparado por <span class="hint">(seu nome/agência — opcional)</span></label>
+              <input type="text" id="f-preparado" placeholder="Ex.: Ana Souza · Studio ADS">
+            </div>
+            <div class="fld">
+              <label for="f-segmento">Nicho/segmento do cliente <span class="hint">(opcional)</span></label>
+              <input type="text" id="f-segmento" placeholder="Ex.: alimentação / padaria de bairro">
+            </div>
+
+            <div class="brief-section-label"><span class="lbl-num">02</span> Alcance &amp; seguidores</div>
+            <div class="fld-row">
+              <div class="fld"><label for="f-seg-ini">Seguidores no início</label><input type="number" min="0" class="num" id="f-seg-ini" placeholder="0"></div>
+              <div class="fld"><label for="f-seg-fim">Seguidores no fim</label><input type="number" min="0" class="num" id="f-seg-fim" placeholder="0"></div>
+            </div>
+            <div class="fld-row">
+              <div class="fld"><label for="f-alcance">Alcance/impressões</label><input type="number" min="0" class="num" id="f-alcance" placeholder="0"></div>
+              <div class="fld"><label for="f-alcance-ant">Período anterior <span class="hint">(opc.)</span></label><input type="number" min="0" class="num" id="f-alcance-ant" placeholder="0"></div>
+            </div>
+            <div class="fld">
+              <label for="f-serie">Série do período <span class="hint">(opc. — nº separados por vírgula p/ o gráfico de tendência)</span></label>
+              <input type="text" id="f-serie" placeholder="Ex.: 1200, 1450, 1600, 2100">
+            </div>
+            <div class="fld">
+              <label for="f-serie-labels">Rótulos da série <span class="hint">(opc.)</span></label>
+              <input type="text" id="f-serie-labels" placeholder="Ex.: Sem 1, Sem 2, Sem 3, Sem 4">
+            </div>
+
+            <div class="brief-section-label"><span class="lbl-num">03</span> Engajamento &amp; conteúdo</div>
+            <div class="fld-row">
+              <div class="fld"><label for="f-curtidas">Curtidas</label><input type="number" min="0" class="num" id="f-curtidas" placeholder="0"></div>
+              <div class="fld"><label for="f-comentarios">Comentários</label><input type="number" min="0" class="num" id="f-comentarios" placeholder="0"></div>
+            </div>
+            <div class="fld-row">
+              <div class="fld"><label for="f-compart">Compartilham.</label><input type="number" min="0" class="num" id="f-compart" placeholder="0"></div>
+              <div class="fld"><label for="f-salvos">Salvamentos</label><input type="number" min="0" class="num" id="f-salvos" placeholder="0"></div>
+            </div>
+            <div class="fld-row">
+              <div class="fld"><label for="f-posts">Posts (feed)</label><input type="number" min="0" class="num" id="f-posts" placeholder="0"></div>
+              <div class="fld"><label for="f-reels">Reels</label><input type="number" min="0" class="num" id="f-reels" placeholder="0"></div>
+            </div>
+            <div class="fld">
+              <label for="f-stories">Stories publicados</label><input type="number" min="0" class="num" id="f-stories" placeholder="0">
+            </div>
+            <div class="fld">
+              <label for="f-toppost">Top conteúdos <span class="hint">(opc. — 1 por linha: tema | métrica)</span></label>
+              <textarea id="f-toppost" placeholder="Reel receita do dia | 42 mil alcance&#10;Post promoção | 380 curtidas"></textarea>
+            </div>
+
+            <div class="brief-section-label"><span class="lbl-num">04</span> Conversão <span class="hint" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-3)">(opcional)</span></div>
+            <div class="fld-row">
+              <div class="fld"><label for="f-visitas">Cliques/visitas ao site</label><input type="number" min="0" class="num" id="f-visitas" placeholder="0"></div>
+              <div class="fld"><label for="f-leads">Leads/contatos</label><input type="number" min="0" class="num" id="f-leads" placeholder="0"></div>
+            </div>
+            <div class="fld-row">
+              <div class="fld"><label for="f-vendas">Vendas/conversões</label><input type="number" min="0" class="num" id="f-vendas" placeholder="0"></div>
+              <div class="fld"><label for="f-invest">Investimento ads (R$)</label><input type="number" min="0" step="0.01" class="num" id="f-invest" placeholder="0"></div>
+            </div>
+            <div class="fld">
+              <label for="f-receita">Receita / faturamento (R$)</label><input type="number" min="0" step="0.01" class="num" id="f-receita" placeholder="0">
+            </div>
+
+            <div class="brief-section-label"><span class="lbl-num">05</span> Contexto &amp; tom</div>
+            <div class="fld">
+              <label for="f-destaques">Destaques / vitórias do período <span class="hint">(opc.)</span></label>
+              <textarea id="f-destaques" placeholder="Ex.: campanha do Dia dos Pais bateu recorde de alcance; parceria com influenciadora local."></textarea>
+            </div>
+            <div class="fld">
+              <label for="f-obs">Contexto para a IA <span class="hint">(opc. — o que foi feito, o que explica os números)</span></label>
+              <textarea id="f-obs" placeholder="Ex.: publicamos 3x mais Reels; investimos em anúncio de tráfego pela 1ª vez; feriado no meio do mês."></textarea>
+            </div>
+            <div class="fld">
+              <label for="f-tom">Tom do relatório</label>
+              <select id="f-tom">
+                <option value="profissional">Profissional / consultivo</option>
+                <option value="direto">Direto / objetivo</option>
+                <option value="caloroso">Caloroso / próximo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="rail-actions">
+            <button id="btn-generate" class="btn-primary">
+              <span class="btn-text">Gerar relatório</span>
+              <span class="btn-loading" style="display:none;">Gerando…</span>
+            </button>
+            <div class="rail-sub-actions">
+              <button id="btn-example" class="btn-secondary" type="button">Ver exemplo</button>
+              <button id="btn-clear" class="btn-secondary" type="button">Limpar</button>
+            </div>
+            <div id="no-key-warn" class="no-key-warn">
+              Adicione sua chave OpenRouter para gerar. <a href="#" id="open-keys-link">Configurar chave</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ---------- STAGE ---------- -->
+        <section class="stage">
+          <div id="stage-toolbar" class="stage-toolbar" hidden>
+            <div class="tb-meta">
+              <p id="tb-title" class="tb-title">Relatório</p>
+              <span id="tb-code" class="tb-code"></span>
+            </div>
+            <div class="tb-actions">
+              <button id="btn-pdf" class="primary" type="button" title="Abrir para salvar em PDF">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+                Salvar em PDF
+              </button>
+              <button id="btn-html" type="button" title="Baixar como arquivo HTML">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                HTML
+              </button>
+              <button id="btn-copy" type="button" title="Copiar o relatório em texto">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Texto
+              </button>
+            </div>
+          </div>
+
+          <div id="stage-empty" class="stage-empty">
+            <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 17v-3"/><path d="M12 17v-6"/><path d="M16 17v-2"/></svg>
+            <h3>Seu relatório aparece aqui</h3>
+            <p>Preencha o briefing ao lado (o mínimo: cliente, período e algumas métricas) e clique em <strong>Gerar relatório</strong>. A IA escreve a análise; os gráficos vêm dos seus números.</p>
+          </div>
+
+          <div id="stage-loading" class="stage-loading" hidden>
+            <div class="spinner"></div>
+            <div id="loading-mono">montando o relatório…</div>
+          </div>
+
+          <div id="report" class="report" hidden>
+            <div class="report-inner" id="report-inner"></div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>Feito com carinho para a comunidade <strong>Maestros da IA</strong></p>
+      <p class="footer-links">
+        <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>
+        <span class="footer-sep">·</span>
+        <a href="data-deletion.html" target="_blank" rel="noopener noreferrer">Solicitar Exclusão de Dados</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- ============ API Key Manager Modal ============ -->
+  <div id="key-modal" class="modal" style="display:none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Chave e modelo de IA</h3>
+        <button id="modal-close" class="btn-icon">&times;</button>
+      </div>
+      <div id="modal-key-inputs" class="key-inputs"></div>
+      <div class="modal-field model-pick">
+        <label for="model-select-modal">Modelo de IA</label>
+        <select id="model-select-modal"></select>
+      </div>
+      <div class="modal-actions">
+        <button id="modal-save" class="btn-primary">Salvar</button>
+        <button id="modal-clear" class="btn-danger">Limpar chave</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="kill-switch.js"></script>
+  <script src="rate-limiter.js"></script>
+  <script src="https://gate.maestrosdaia.com/v1/membership-gate.js"></script>
+  <script src="api-key-manager.js"></script>
+  <script src="feedback-widget.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

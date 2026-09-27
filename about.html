@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre — Relatório IA</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23141b2d'/%3E%3Crect x='8' y='6' width='16' height='20' rx='2' fill='%23ffffff'/%3E%3Crect x='8' y='6' width='16' height='3' rx='1.5' fill='%23b0894f'/%3E%3Crect x='11' y='19' width='2.6' height='4' fill='%2334506f'/%3E%3Crect x='14.7' y='16' width='2.6' height='7' fill='%2334506f'/%3E%3Crect x='18.4' y='13' width='2.6' height='10' fill='%23b0894f'/%3E%3C/svg%3E">
+  <style>
+    .about-page { min-height: 100vh; display: flex; flex-direction: column; }
+    .about-nav {
+      display: flex; align-items: center; gap: 12px; padding: 16px 24px;
+      border-bottom: 1px solid var(--line); background: rgba(255,255,255,.85);
+      backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100;
+    }
+    .about-nav a { color: var(--steel); text-decoration: none; font-size: 14px; font-weight: 650; display: flex; align-items: center; gap: 6px; }
+    .about-nav a:hover { text-decoration: underline; }
+    .about-content { flex: 1; max-width: 760px; margin: 0 auto; padding: 44px 24px; width: 100%; }
+    .about-hero { text-align: center; margin-bottom: 40px; }
+    .about-hero .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); font-weight: 700; }
+    .about-hero h1 { font-family: var(--serif); font-size: clamp(30px, 5vw, 44px); font-weight: 700; margin: 10px 0 12px; color: var(--ink); }
+    .about-hero p { color: var(--ink-2); font-size: 17px; max-width: 560px; margin: 0 auto; line-height: 1.6; }
+    .about-section {
+      background: var(--sheet); border: 1px solid var(--line); border-top: 3px solid var(--steel);
+      border-radius: var(--radius); padding: 26px 28px; margin-bottom: 18px; box-shadow: var(--shadow-1);
+    }
+    .about-section h2 { font-family: var(--serif); font-size: 21px; font-weight: 700; margin: 0 0 12px; color: var(--ink); }
+    .about-section p, .about-section li { color: var(--ink-2); font-size: 15px; line-height: 1.7; }
+    .steps-list { list-style: none; counter-reset: steps; padding: 0; margin: 0; }
+    .steps-list li {
+      counter-increment: steps; display: flex; gap: 14px; align-items: flex-start;
+      padding: 12px 0; border-bottom: 1px solid var(--line);
+    }
+    .steps-list li:last-child { border-bottom: none; }
+    .steps-list li::before {
+      content: counter(steps); min-width: 30px; height: 30px; background: var(--ink); color: #fff;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 14px; font-weight: 700; flex-shrink: 0;
+    }
+    .byok-highlight { background: var(--pos-soft); border: 1px solid #bfe3d0; border-radius: var(--radius-sm); padding: 18px 20px; }
+    .byok-highlight strong { color: var(--pos); }
+    .feature-list { list-style: none; padding: 0; margin: 0; }
+    .feature-list li { position: relative; padding: 8px 0 8px 26px; }
+    .feature-list li::before { content: ""; position: absolute; left: 3px; top: 15px; width: 8px; height: 8px; background: var(--gold); border-radius: 2px; transform: rotate(45deg); }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .badge { background: var(--steel-soft); color: var(--steel); border: 1px solid #d7e1ec; padding: 4px 12px; border-radius: 100px; font-size: 13px; font-weight: 600; }
+    .cta-section { text-align: center; padding: 32px 24px 12px; }
+    .cta-btn {
+      display: inline-block; padding: 15px 44px; background: var(--ink); color: #fff; border-radius: var(--radius-sm);
+      font-size: 16px; font-weight: 700; text-decoration: none; box-shadow: 0 2px 0 #060a14, 0 8px 22px rgba(20,27,45,.22);
+    }
+    .cta-btn:hover { background: #1d2740; }
+    .cta-url { display: block; margin-top: 12px; font-family: var(--mono); font-size: 13px; color: var(--ink-3); }
+    .about-footer { text-align: center; padding: 28px; color: var(--ink-3); font-size: 13px; border-top: 1px solid var(--line); }
+    .about-footer a { color: var(--steel); text-decoration: none; }
+    .about-footer a:hover { text-decoration: underline; }
+    @media (max-width: 640px) { .about-content { padding: 28px 16px; } .about-section { padding: 20px; } }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="about-page">
+    <nav class="about-nav">
+      <a href="index.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar para a ferramenta
+      </a>
+    </nav>
+
+    <div class="about-content">
+      <div class="about-hero">
+        <div class="kicker">Relatório de resultados</div>
+        <h1>Relatório IA</h1>
+        <p>Transforme as métricas do período em um relatório profissional para o cliente — com gráficos, análise escrita pela IA e sua marca — pronto para enviar em PDF.</p>
+      </div>
+
+      <div class="about-section">
+        <h2>O que faz</h2>
+        <p>O <strong>Relatório IA</strong> é o entregável mensal de quem cuida do marketing e das redes sociais de clientes (ou do próprio negócio). Você preenche as métricas do período — alcance, seguidores, engajamento, publicações, leads, vendas, investimento — e a ferramenta monta um relatório de resultados completo e apresentável:</p>
+        <ul class="feature-list">
+          <li>Uma <strong>capa profissional</strong> com o nome do cliente, o período e quem preparou.</li>
+          <li>Uma <strong>faixa de indicadores (KPIs)</strong> com os números-chave e as variações (▲/▼) frente ao período anterior.</li>
+          <li><strong>Gráficos de verdade</strong> montados a partir dos seus números: evolução no período, crescimento de seguidores, composição do engajamento, funil de resultados e mix de conteúdo.</li>
+          <li>Uma <strong>análise escrita pela IA</strong> — resumo executivo, leitura de crescimento, engajamento e conversão, destaques e próximos passos.</li>
+          <li>Exportação em <strong>PDF</strong>, arquivo <strong>HTML</strong> autocontido e <strong>texto</strong> para colar onde quiser.</li>
+        </ul>
+        <div class="badges">
+          <span class="badge">Gráficos SVG reais</span>
+          <span class="badge">Análise por IA</span>
+          <span class="badge">Export PDF</span>
+          <span class="badge">Multi-modelo (OpenRouter)</span>
+        </div>
+      </div>
+
+      <div class="about-section">
+        <h2>Para quem</h2>
+        <p>Social media managers, agências, freelancers e gestores de tráfego que precisam entregar um relatório mensal ao cliente — e também criadores e pequenos negócios que querem acompanhar o próprio crescimento com um "boletim" claro e bonito, sem montar planilhas e gráficos na mão.</p>
+      </div>
+
+      <div class="about-section">
+        <h2>Como usar</h2>
+        <ol class="steps-list">
+          <li><span>Configure sua chave da OpenRouter (uma só chave acessa Claude, GPT, Gemini, DeepSeek e mais).</span></li>
+          <li><span>No briefing, informe o cliente e o período e preencha as métricas que você tem — o que ficar em branco é simplesmente omitido.</span></li>
+          <li><span>Se quiser, adicione destaques do período e um contexto para a IA interpretar os números.</span></li>
+          <li><span>Clique em <strong>Gerar relatório</strong>: a IA escreve a análise e os gráficos são montados a partir dos seus números (nada é inventado).</span></li>
+          <li><span>Revise e exporte em PDF (ou HTML/texto) para enviar ao cliente.</span></li>
+        </ol>
+      </div>
+
+      <div class="about-section">
+        <h2>Suas chaves, seu controle</h2>
+        <div class="byok-highlight">
+          <p>Esta ferramenta usa o modelo <strong>BYOK (Bring Your Own Key)</strong>: você cola a sua própria chave de API diretamente no navegador.</p>
+          <p style="margin-top: 12px;">A chave fica guardada <strong>apenas no localStorage do seu navegador</strong>. Ela <strong>nunca</strong> é enviada para nossos servidores, nunca é salva em banco de dados e nunca sai do seu dispositivo. Toda a geração roda direto entre o seu navegador e a OpenRouter. Você pode ver, trocar ou apagar a chave quando quiser.</p>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <a href="https://relatorioia.maestrosdaia.com" class="cta-btn">Acessar ferramenta</a>
+        <span class="cta-url">relatorioia.maestrosdaia.com</span>
+      </div>
+    </div>
+
+    <footer class="about-footer">
+      <p>Feito com carinho para a comunidade <strong>Maestros da IA</strong></p>
+      <p style="margin-top: 8px;">
+        <a href="privacy-policy.html">Política de Privacidade</a>
+        <span style="margin:0 8px;color:var(--line-2)">·</span>
+        <a href="data-deletion.html">Solicitar Exclusão de Dados</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>

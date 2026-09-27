@@ -1,0 +1,13 @@
+{
+  "name": "relatorio-ia",
+  "version": "1.0.0",
+  "description": "Gerador de relatório de resultados para cliente: você insere as métricas do período (redes sociais, tráfego, vendas) e recebe um relatório profissional com gráficos e análise escrita pela IA, pronto para enviar em PDF.",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve .",
+    "lint": "echo 'No linter configured — static HTML project'"
+  },
+  "keywords": ["maestria-da-ia", "community-tool", "byok"],
+  "author": "APP-BUILDER-01",
+  "license": "UNLICENSED"
+}
