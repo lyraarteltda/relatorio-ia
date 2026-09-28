@@ -190,7 +190,7 @@ const App = (function () {
   function buildMessages(b) {
     var sys = 'Você é um(a) analista de marketing e social media sênior de uma agência brasileira. ' +
       'Você escreve relatórios de resultados claros, honestos e acionáveis para o CLIENTE ler. ' +
-      'Escreva SEMPRE em português do Brasil, com acentuação correta, em tom ' + (TOM_LABEL[b.tom] || TOM_LABEL.profissional) + '. ' +
+      'Escreva SEMPRE 100% em português do Brasil, com acentuação correta e SEM nenhuma palavra ou expressão em inglês (o relatório é enviado ao cliente), em tom ' + (TOM_LABEL[b.tom] || TOM_LABEL.profissional) + '. ' +
       'REGRA CRÍTICA: use SOMENTE os números fornecidos — NUNCA invente métricas, percentuais ou valores que não foram dados. ' +
       'Você pode calcular relações a partir dos números dados (ex.: variação %, taxa de engajamento) e interpretar, mas não fabrique dados. ' +
       'Se um dado não foi informado, não o cite. Refira-se ao cliente pelo nome. Sem emojis. ' +
